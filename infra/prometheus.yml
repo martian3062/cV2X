@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'django'
+    static_configs:
+      - targets: ['backend_gateway:8000']
+
+  - job_name: 'fastapi'
+    static_configs:
+      - targets: ['ai_inference:8001']

@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+build/
+.env*.local
+.npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Mac
+.DS_Store
+
+# Databases
+*.sqlite3
+db.sqlite3
+
+# IDE / Editor
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Datasets (Specifically Exclude NuScenes v1.0-mini)
+v1.0-mini/
+data/nuscenes/
+datasets/
+data/
+*.zip
+*.tar.gz
+*.pth
+*.pt
+checkpoints/
+
+# Logs
+logs/
+*.log
