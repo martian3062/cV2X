@@ -67,5 +67,38 @@ Vercel is a **Serverless** platform. Serverless functions **do not support persi
 
 To make the app function entirely in production:
 1.  **Frontend**: Deploy the `frontend/` directory to **Vercel** (as shown above).
-2.  **Backend (AI Service)**: Deploy the `ai_service/` directory to a persistent cloud provider (like Render, AWS EC2, DigitalOcean, or an L4 GPU VM) because it requires uninterrupted execution for PyTorch and WebSockets.
-3.  **Link Them**: Update the websocket connection inside `frontend/src/components/ThreeScene.tsx` from `ws://localhost:8002...` to point to the new `wss://...` URL of your deployed Python AI service.
+2.  **Backend (AI Service)**: Deploy the `ai_service/` directory to a persistent cloud provider. We recommend **Koyeb** for this, as they support long-lived WebSockets and Dockerfiles natively. See the Koyeb tutorial below.
+
+---
+
+## ☁️ AI Backend Deployment (Koyeb)
+
+[Koyeb](https://www.koyeb.com/) is an excellent cloud platform for the Python PyTorch backend because it natively supports persistent WebSockets and seamless Docker container builds without connection timeouts.
+
+### Step-by-Step Koyeb Deployment Tutorial
+
+1. **Import to Koyeb**:
+   - Log into Koyeb and click **Create Service**.
+   - Select **GitHub** and choose your `cV2X` repository.
+
+2. **Configure the Monorepo Path (CRITICAL)**:
+   - In the advanced settings or directly in the builder config, find the **Work directory** field and enter `ai_service`. 
+   - *If you skip this, Koyeb will just look at the root of the repo and fail.*
+
+3. **Select the Builder**:
+   - Choose the **Dockerfile** builder option. 
+   - Koyeb will execute the `ai_service/Dockerfile`, downloading PyTorch and all your dependencies.
+
+4. **Network & Ports**:
+   - The Dockerfile exposes Port `8001` natively. Koyeb should automatically detect this and map it to the public HTTP/WS routing layer.
+
+5. **Deploy**:
+   - Click deploy! It will construct the `pytorch/pytorch` environment and boot the FastAPI Python server.
+
+6. **Link Vercel to Koyeb**:
+   - Koyeb will grant you a public live URL (e.g., `https://your-nexsim-ai.koyeb.app`).
+   - Open your local code: `frontend/src/components/ThreeScene.tsx`.
+   - Find the websocket connection string: `ws://localhost:8002/ws/stream`.
+   - Change it to your new secure Koyeb address (ensure you swap `ws://` for `wss://`):
+     `wss://your-nexsim-ai.koyeb.app/ws/stream`
+   - Commit and push this change to GitHub. Vercel will automatically rebuild your frontend, and your live website will now successfully stream 4D coordinates directly from your Koyeb AI engine!
